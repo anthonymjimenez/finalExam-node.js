@@ -16,24 +16,29 @@ var db = new sqlite3.Database("./db/user.db", (err) => {
   console.log("Connected to user.db");
 });
 
-db.all(sqlstatement, [], (err, rows) => {
-  if (err) {
-    throw err;
-  }
-  rows.forEach((row) => {
-    databaseInfo.push({
-      name: row.first_name + " " + row.last_name,
-      email: row.email,
-      userID: row.id,
+function refreshDB() {
+  db.all(sqlstatement, [], (err, rows) => {
+    databaseInfo = [];
+    if (err) {
+      throw err;
+    }
+    rows.forEach((row) => {
+      databaseInfo.push({
+        name: row.first_name + " " + row.last_name,
+        email: row.email,
+        userID: row.id,
+      });
     });
   });
-});
+}
 
+refreshDB();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /* GET home page. */
 app.get("/", function (req, res, next) {
+  refreshDB();
   res.render("index", {
     users: databaseInfo,
     deleted: false,
@@ -54,7 +59,7 @@ app.post("/newItem", function (req, res, next) {
       console.log(`A row has been inserted with rowid ${this.lastID}`);
     }
   );
-
+  refreshDB();
   res.render("index", {
     users: databaseInfo,
     deleted: false,
@@ -68,8 +73,7 @@ app.get("/edit/:email", function (req, res, next) {
 });
 
 app.post("/edit", function (req, res) {
-  console.log(savedEmail);
-  console.log(req.body.newEmail);
+  refreshDB();
   db.run(
     `UPDATE users SET email = ? where email = ?`,
     [req.body.newEmail, savedEmail],
@@ -92,6 +96,7 @@ app.get("/delete/:userID", function (req, res) {
     }
     console.log(`Row(s) deleted ${this.changes}`);
   });
+  refreshDB();
   res.render("index", {
     users: databaseInfo,
     deleted: true,

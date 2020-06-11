@@ -3,10 +3,10 @@
 <hr/>
 <ul>
     <% if(deleted) { %>
-        <h2>Reset to see deleted items</h2>
+        <h2><a href = "/">Click here to see deleted items</a></h2>
    <% } %>
    <% if(newItem) { %>
-    <h2>Reset to see added items</h2>
+    <h2><a href = "/">Click here to see added items</a></h2>
 <% } %>
    <form method="POST" action="/newItem" target="_blank">
     <h2>Add new Item</h2>
