@@ -1,0 +1,28 @@
+
+<h1>Profile Page</h1>
+<hr/>
+<ul>
+    <% if(deleted) { %>
+        <h2>Reset to see deleted items</h2>
+   <% } %>
+   <% if(newItem) { %>
+    <h2>Reset to see added items</h2>
+<% } %>
+   <form method="POST" action="/newItem" target="_blank">
+    <h2>Add new Item</h2>
+    <label>First Name</label> <input type = "text" name = "first_name"> 
+    <label>Last Name</label> <input type = "text" name = "last_name"> 
+    <label>Email</label> <input type = "text" name = "email">
+    <button type="submit">Update</button>
+  </form>
+    <% users.map(({name, email, userID}) => { %>
+          <li><h1>Name: <%= name %></h1>
+          <h2>Email: <%= email %></h2>
+          <h3>userID: <%= userID %></h3>
+          <a href="/edit/<%=email%>">Update Email</a>          
+          <a href="/delete/<%=userID%>">Delete</a>
+          <hr/>
+          </li>
+     <%  }) %>
+  </ul
+
